@@ -6363,9 +6363,27 @@ namespace Amazon.S3
             }
 
             HttpStatusCode statusCode = httpResponse.StatusCode;
-
-            return (statusCode >= HttpStatusCode.MovedPermanently &&
-                statusCode < HttpStatusCode.BadRequest);
+            // HTTP status codes 301, 302, 303, 305 and 307 are redirects.
+            // There are other response statuses that should have Location
+            // headers, but they should not be automatically fetched by the
+            // user agent.
+            if (statusCode == HttpStatusCode.MovedPermanently)
+            {
+                return true;
+            }
+            if (statusCode == HttpStatusCode.Found)
+            {
+                return true;
+            }
+            if (statusCode == HttpStatusCode.SeeOther)
+            {
+                return true;
+            }
+            if (statusCode == HttpStatusCode.TemporaryRedirect)
+            {
+                return true;
+            }
+            return false;
         }
 
         /*
