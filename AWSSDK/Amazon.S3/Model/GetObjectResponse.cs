@@ -22,6 +22,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 
 using Amazon.S3.Util;
 using Amazon.Util;
@@ -57,7 +58,6 @@ namespace Amazon.S3.Model
 
         string bucketName;
         string key;
-
 
 
         /// <summary>
@@ -169,6 +169,19 @@ namespace Amazon.S3.Model
         {
             get { return this.restoreInProgress; }
             set { this.restoreInProgress = value; }
+        }
+
+        /// <summary>
+        /// Gets the NotModified property.
+        /// Returns true if the S3 endpoint returned a 304 Not Modified response
+        /// due to NotModifiedSince or ETagToNotMatch being provided in the request.
+        /// </summary>
+        public bool NotModified
+        {
+            get
+            {
+                return this.httpResponse.StatusCode == HttpStatusCode.NotModified;
+            }
         }
 
         /// <summary>
